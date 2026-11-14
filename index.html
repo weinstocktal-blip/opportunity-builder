@@ -1,0 +1,963 @@
+HELLO_TEST_123<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Opportunity Builder</title>
+<style>
+  :root{
+    --bg:#f6f7f9; --surface:#ffffff; --ink:#1a1d24; --muted:#616878; --line:#e4e7ec;
+    --brand:#2f5bea; --brand-dark:#1f3fb0; --brand-soft:#eef2fe;
+    --fact:#0d7a4f; --fact-soft:#e6f5ee; --hyp:#b4690e; --hyp-soft:#fbf1e3;
+    --unknown:#6b7280; --unknown-soft:#eef0f3; --danger:#c0392b; --ok:#0d7a4f;
+    --radius:12px; --shadow:0 1px 2px rgba(16,24,40,.06),0 1px 3px rgba(16,24,40,.1);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.5;font-size:15px}
+  a{color:var(--brand)}
+  .wrap{max-width:860px;margin:0 auto;padding:0 20px 80px}
+  header.top{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:40}
+  .topinner{max-width:860px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .brandmark{display:flex;align-items:center;gap:10px;font-weight:700}
+  .logo{width:26px;height:26px;border-radius:7px;background:var(--brand);display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:15px}
+  .proto{font-size:11px;font-weight:600;color:var(--muted);background:var(--unknown-soft);border:1px solid var(--line);padding:3px 8px;border-radius:999px}
+  .steps{display:flex;gap:6px;flex-wrap:wrap;margin:18px 0 22px}
+  .step{font-size:12px;color:var(--muted);background:var(--surface);border:1px solid var(--line);padding:5px 10px;border-radius:999px;white-space:nowrap}
+  .step.active{color:var(--brand-dark);border-color:var(--brand);background:var(--brand-soft);font-weight:600}
+  .step.done{color:var(--ok);border-color:#bfe3cf;background:var(--fact-soft)}
+  h1{font-size:24px;margin:6px 0 4px}
+  h2{font-size:19px;margin:0 0 4px}
+  h3{font-size:15px;margin:0 0 6px}
+  .lede{color:var(--muted);margin:0 0 18px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;margin-bottom:16px}
+  .card.tight{padding:14px}
+  .row{display:flex;gap:12px;flex-wrap:wrap}
+  .btn{appearance:none;border:1px solid var(--brand);background:var(--brand);color:#fff;font-size:14px;font-weight:600;padding:10px 16px;border-radius:9px;cursor:pointer;transition:.15s}
+  .btn:hover{background:var(--brand-dark);border-color:var(--brand-dark)}
+  .btn.ghost{background:var(--surface);color:var(--brand-dark);border-color:var(--line)}
+  .btn.ghost:hover{background:var(--brand-soft)}
+  .btn.sm{padding:6px 11px;font-size:13px}
+  .btn.danger{background:var(--surface);color:var(--danger);border-color:#e7c3bd}
+  .btn.danger:hover{background:#fbecea}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  textarea,input[type=text],input[type=url],select{width:100%;font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:9px 11px}
+  textarea:focus,input:focus,select:focus{outline:2px solid var(--brand-soft);border-color:var(--brand)}
+  label.fld{display:block;font-size:13px;font-weight:600;margin:0 0 5px;color:var(--ink)}
+  .hint{font-size:12px;color:var(--muted);margin-top:4px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:620px){.grid2{grid-template-columns:1fr}}
+  .badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px;text-transform:uppercase;letter-spacing:.02em}
+  .badge.fact{color:var(--fact);background:var(--fact-soft)}
+  .badge.hyp{color:var(--hyp);background:var(--hyp-soft)}
+  .badge.unknown{color:var(--unknown);background:var(--unknown-soft)}
+  .badge.hi{color:var(--fact);background:var(--fact-soft)}
+  .badge.med{color:var(--hyp);background:var(--hyp-soft)}
+  .badge.low{color:var(--unknown);background:var(--unknown-soft)}
+  .cap{display:flex;align-items:flex-start;gap:10px;border:1px solid var(--line);border-radius:10px;padding:11px 12px;margin-bottom:8px;background:var(--surface)}
+  .cap.confirmed{border-color:#bfe3cf;background:#fbfefc}
+  .cap.rejected{opacity:.5}
+  .cap .mid{flex:1;min-width:0}
+  .cap .evid{font-size:12px;color:var(--muted);margin-top:3px}
+  .capctrls{display:flex;gap:6px;flex-wrap:wrap}
+  .pill{font-size:11px;font-weight:600;color:var(--muted);background:var(--unknown-soft);border:1px solid var(--line);padding:2px 7px;border-radius:999px}
+  .pill.cat{color:var(--brand-dark);background:var(--brand-soft);border-color:#cdd9fb}
+  .companycard{display:flex;flex-direction:column;gap:8px;border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:12px;background:var(--surface);box-shadow:var(--shadow)}
+  .companycard .hd{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+  .fitreasons{margin:4px 0 0;padding-left:18px;font-size:13.5px}
+  .fitreasons li{margin:2px 0}
+  .caveat{font-size:12.5px;color:var(--hyp);background:var(--hyp-soft);border-radius:8px;padding:7px 10px}
+  .signal{border:1px solid var(--line);border-left:3px solid var(--fact);border-radius:8px;padding:10px 12px;margin-bottom:8px;background:#fcfdfc}
+  .signal .meta{font-size:12px;color:var(--muted);margin-top:4px}
+  .signal.stale{border-left-color:var(--hyp);background:var(--hyp-soft)}
+  .opp{border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:14px;background:var(--surface)}
+  .opp.selected{border-color:var(--brand);box-shadow:0 0 0 2px var(--brand-soft)}
+  .ground{border-radius:9px;padding:9px 11px;margin:7px 0;font-size:13.5px}
+  .ground.fact{background:var(--fact-soft)}
+  .ground.hyp{background:var(--hyp-soft)}
+  .ground.scope{background:var(--unknown-soft)}
+  .ground .lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;display:block;margin-bottom:2px}
+  .ground.fact .lbl{color:var(--fact)}
+  .ground.hyp .lbl{color:var(--hyp)}
+  .ground.scope .lbl{color:var(--unknown)}
+  ul.deliv{margin:4px 0 0;padding-left:18px;font-size:13.5px}
+  .radiolist label{display:flex;gap:9px;align-items:flex-start;border:1px solid var(--line);border-radius:9px;padding:10px 12px;margin-bottom:8px;cursor:pointer}
+  .radiolist input{margin-top:3px}
+  .radiolist label.on{border-color:var(--brand);background:var(--brand-soft)}
+  .check{display:flex;gap:9px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--line)}
+  .check:last-child{border-bottom:none}
+  .outreach{white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;background:#fbfbfd;border:1px solid var(--line);border-radius:9px;padding:14px;line-height:1.55}
+  .note{font-size:13px;color:var(--muted);background:var(--unknown-soft);border-radius:9px;padding:10px 12px}
+  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:9px;font-size:13px;opacity:0;pointer-events:none;transition:.2s;z-index:60}
+  .toast.show{opacity:1}
+  .footbar{display:flex;justify-content:space-between;gap:12px;margin-top:8px}
+  .stars{display:flex;gap:4px}
+  .star{font-size:22px;color:#d4d8e0;cursor:pointer;line-height:1}
+  .star.on{color:#f0a826}
+  .mini{font-size:12px;color:var(--muted)}
+  .kpi{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+  .kpi .b{border:1px solid var(--line);border-radius:9px;padding:8px 12px;font-size:12.5px;background:var(--surface)}
+  .kpi .b b{display:block;font-size:17px}
+  .divider{height:1px;background:var(--line);margin:14px 0}
+  .hidden{display:none !important}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="topinner">
+    <div class="brandmark"><span class="logo">OB</span> Opportunity Builder</div>
+    <span class="proto" title="This prototype uses sample seed data for user testing">Prototype • sample data</span>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="steps" id="steps"></div>
+  <div id="screen"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   Opportunity Builder prototype
+   Student first journey: profile to grounded outreach package.
+   All data is sample seed data held in the browser session.
+   "Today" for freshness is fixed to the prototype test date.
+   ============================================================ */
+
+const TODAY = new Date("2026-11-14");
+const STALE_DAYS = 120; // signals older than this are treated as stale
+
+/* ---------- Capability taxonomy ---------- */
+const CATS = {
+  finance:      {label:"Finance and unit economics", kw:["financial model","operating model","unit economics","valuation","fp&a","forecast","budget","p&l","pricing","fundrais","investment","equity research","banking","cfo","revenue model","dcf","cap table"]},
+  research:     {label:"Customer research and discovery", kw:["customer interview","user research","discovery","segmentation","voice of customer","survey","persona","usability","jobs to be done","qualitative"]},
+  growth:       {label:"Growth and demand generation", kw:["growth","demand gen","acquisition","seo","paid","performance marketing","funnel","retention","lifecycle","conversion","crm campaign","email marketing"]},
+  marketing:    {label:"Marketing and brand", kw:["brand","marketing","content","positioning","messaging","campaign","social media","go to market","gtm","launch plan","pr"]},
+  product:      {label:"Product management", kw:["product manager","product management","roadmap","prd","prioritiz","feature","a/b test","user stories","backlog","pm"]},
+  ops:          {label:"Operations", kw:["operations","process improvement","supply chain","logistics","project management","vendor","fulfillment","lean","six sigma","workflow"]},
+  partnerships: {label:"Partnerships and business development", kw:["partnership","business development","bd","alliance","channel","sales","account management","deal","negotiat"]},
+  analytics:    {label:"Data and analytics", kw:["sql","analytics","data analysis","dashboard","tableau","power bi","python","statistics","modeling","experiment","metrics","kpi"]},
+  strategy:     {label:"Strategy", kw:["strategy","market sizing","competitive analysis","consulting","business case","due diligence","market entry","corporate development"]}
+};
+const CAT_KEYS = Object.keys(CATS);
+
+/* ---------- Seeded NYC startups (sample data) ----------
+   Sources are illustrative seed records for the prototype.
+   signalType drives opportunity templates. age computed from published. */
+function daysSince(d){ return Math.round((TODAY - new Date(d))/86400000); }
+
+const COMPANIES = [
+  {
+    id:"cadence", name:"Cadence Health", desc:"Digital health platform for post operative patient monitoring.",
+    location:"New York, NY", stage:"Seed", industries:["Healthcare","SaaS"],
+    workAreas:["growth","research","marketing","analytics","ops"],
+    signals:[
+      {type:"funding", fact:"Closed a 6M dollar seed round led by a NYC health fund.", excerpt:"The round will fund clinical pilots and a first commercial team.",
+       source:{publisher:"TechBrief NY (sample)", published:"2026-10-20", url:"https://example.com/cadence-seed"}},
+      {type:"launch", fact:"Began onboarding its first three hospital pilot sites.", excerpt:"Pilots focus on reducing readmissions after orthopedic surgery.",
+       source:{publisher:"Company blog (sample)", published:"2026-10-02", url:"https://example.com/cadence-pilots"}}
+    ]
+  },
+  {
+    id:"loomwork", name:"Loomwork", desc:"Workflow and approvals software for creative and marketing agencies.",
+    location:"New York, NY", stage:"Series A", industries:["SaaS","B2B"],
+    workAreas:["product","growth","partnerships","research","analytics"],
+    signals:[
+      {type:"launch", fact:"Launched an enterprise tier with SSO and audit logs.", excerpt:"The tier targets agencies with more than two hundred seats.",
+       source:{publisher:"ProductHunt (sample)", published:"2026-09-16", url:"https://example.com/loomwork-enterprise"}},
+      {type:"partnership", fact:"Announced an integration with a major design file tool.", excerpt:"Shared customers can sync assets directly into approvals.",
+       source:{publisher:"Company press (sample)", published:"2026-11-01", url:"https://example.com/loomwork-integration"}}
+    ]
+  },
+  {
+    id:"verdant", name:"Verdant Grocery", desc:"Low waste neighborhood grocery with a same day delivery model.",
+    location:"Brooklyn, NY", stage:"Seed", industries:["Consumer","Climate","Retail"],
+    workAreas:["ops","finance","growth","analytics","marketing"],
+    signals:[
+      {type:"expansion", fact:"Expanded to three new Brooklyn neighborhoods.", excerpt:"Each location runs a dark store plus a small pickup counter.",
+       source:{publisher:"Local Retail Wire (sample)", published:"2026-10-28", url:"https://example.com/verdant-expand"}}
+    ]
+  },
+  {
+    id:"kindred", name:"Kindred Finance", desc:"Banking and tax tools built for freelancers and solo operators.",
+    location:"New York, NY", stage:"Series A", industries:["Fintech","Consumer"],
+    workAreas:["finance","growth","analytics","research","product"],
+    signals:[
+      {type:"partnership", fact:"Signed a distribution partnership with a payroll provider.", excerpt:"Freelancers paid through the provider can open an account in one step.",
+       source:{publisher:"Fintech Daily (sample)", published:"2026-11-04", url:"https://example.com/kindred-payroll"}},
+      {type:"growth", fact:"Reported crossing fifty thousand funded accounts.", excerpt:"Growth has been strongest among creative and consulting freelancers.",
+       source:{publisher:"Company update (sample)", published:"2026-09-30", url:"https://example.com/kindred-50k"}}
+    ]
+  },
+  {
+    id:"northloop", name:"NorthLoop Logistics", desc:"Last mile logistics software for regional e commerce brands.",
+    location:"Long Island City, NY", stage:"Series A", industries:["Logistics","B2B","SaaS"],
+    workAreas:["ops","analytics","partnerships","finance","strategy"],
+    signals:[
+      {type:"expansion", fact:"Opened a Brooklyn fulfillment hub.", excerpt:"The hub adds same day capacity for outer borough deliveries.",
+       source:{publisher:"Supply Chain Post (sample)", published:"2026-10-10", url:"https://example.com/northloop-hub"}}
+    ]
+  },
+  {
+    id:"palette", name:"Palette AI", desc:"AI assisted design tools for small marketing teams.",
+    location:"New York, NY", stage:"Seed", industries:["AI","SaaS","Design"],
+    workAreas:["product","growth","research","marketing","partnerships"],
+    signals:[
+      {type:"launch", fact:"Released a public API for its brand asset generator.", excerpt:"Developers can now embed Palette output in their own apps.",
+       source:{publisher:"Dev News (sample)", published:"2026-09-12", url:"https://example.com/palette-api"}}
+    ]
+  },
+  {
+    id:"hearthside", name:"Hearthside", desc:"Direct to consumer pantry brand focused on regional recipes.",
+    location:"New York, NY", stage:"Seed", industries:["Consumer","CPG","Food"],
+    workAreas:["marketing","growth","finance","ops","research"],
+    signals:[
+      {type:"partnership", fact:"Entered a regional grocery chain for the first time.", excerpt:"The brand now sits on shelves in forty stores across the Northeast.",
+       source:{publisher:"CPG Insider (sample)", published:"2026-09-22", url:"https://example.com/hearthside-retail"}},
+      {type:"launch", fact:"Launched a subscription bundle for repeat buyers.", excerpt:"Early repeat rate is the metric the team is watching most.",
+       source:{publisher:"Company blog (sample)", published:"2026-06-15", url:"https://example.com/hearthside-sub"}}
+    ]
+  },
+  {
+    id:"stride", name:"Stride Labs", desc:"Wearable and app platform for running clubs and coaches.",
+    location:"New York, NY", stage:"Series A", industries:["Consumer","Health","Hardware"],
+    workAreas:["growth","product","analytics","partnerships","marketing"],
+    signals:[
+      {type:"launch", fact:"Launched a paid coaching subscription.", excerpt:"The subscription pairs wearable data with human coaches.",
+       source:{publisher:"Fitness Wire (sample)", published:"2026-10-05", url:"https://example.com/stride-sub"}}
+    ]
+  },
+  {
+    id:"mendable", name:"Mendable Home", desc:"Marketplace that matches homeowners with vetted repair pros.",
+    location:"New York, NY", stage:"Seed", industries:["Proptech","Marketplace","Consumer"],
+    workAreas:["ops","growth","research","partnerships","analytics"],
+    signals:[
+      {type:"funding", fact:"Raised a 3M dollar seed round.", excerpt:"The team plans to deepen supply in a few dense zip codes before expanding.",
+       source:{publisher:"Proptech Brief (sample)", published:"2026-07-09", url:"https://example.com/mendable-seed"}}
+    ]
+  },
+  {
+    id:"tible", name:"Tible", desc:"Social learning app where people teach short skills to each other.",
+    location:"New York, NY", stage:"Seed", industries:["Consumer","EdTech","Social"],
+    workAreas:["product","growth","research","analytics","marketing"],
+    signals:[
+      {type:"growth", fact:"Reported reaching one hundred thousand registered users.", excerpt:"Retention past week four is the current focus.",
+       source:{publisher:"App Watch (sample)", published:"2026-08-18", url:"https://example.com/tible-100k"}}
+    ]
+  }
+];
+
+/* ---------- Opportunity templates by signalType x capability category ----------
+   Each returns a grounded project tied to the specific signal + capability.
+   Keeps generation inspectable and prevents invented internal knowledge. */
+function sector(c){ return (c.industries[0]||"the company").toLowerCase(); }
+
+const TEMPLATES = {
+  funding: {
+    growth:(c,s)=>({obj:`Draft a first thirty day customer acquisition test plan for ${c.name}`, hyp:`A fresh seed round usually means ${c.name} needs to turn funding into early commercial traction, which a lightweight acquisition experiment could support.`, deliv:["A one page experiment brief with two channels to test","A simple target customer definition","A short list of three measurable signals of success"], val:`Ask the team which customer segment they most want to prove in the next quarter.`}),
+    finance:(c,s)=>({obj:`Build a simple unit economics sketch for ${c.name}`, hyp:`After a seed round, founders often need a clearer early view of cost to acquire and payback, which a public assumptions model could start.`, deliv:["A one page unit economics model using clearly stated public assumptions","A sensitivity view on one key driver","A list of the assumptions you would confirm with the team"], val:`Ask which single cost or revenue assumption they feel least sure about.`}),
+    strategy:(c,s)=>({obj:`Map the near term competitive landscape for ${c.name}`, hyp:`New funding tends to sharpen questions about where to focus, which a concise landscape view could inform.`, deliv:["A one page landscape of four to six comparable players","A short note on two white space angles","Open questions for the team"], val:`Ask who they consider their closest two competitors today.`})
+  },
+  launch: {
+    research:(c,s)=>({obj:`Design a ten person discovery plan for the new launch at ${c.name}`, hyp:`A recent launch creates a need to learn how early users react, which a structured discovery plan could support.`, deliv:["A ten person interview target list with rationale","A short interview guide of six questions","A simple synthesis template"], val:`Ask what they most want to learn from the first users of the launch.`}),
+    product:(c,s)=>({obj:`Write a lightweight feedback and prioritization framework for the ${c.name} launch`, hyp:`Right after a launch, teams juggle incoming feedback, which a simple prioritization view could help organize.`, deliv:["A one page intake and scoring template","Three example entries scored against it","A note on what you would not build yet"], val:`Ask how they currently decide what to fix first after shipping.`}),
+    marketing:(c,s)=>({obj:`Draft a launch messaging teardown and improvement note for ${c.name}`, hyp:`A new launch benefits from sharp external messaging, which a public teardown could strengthen.`, deliv:["A short teardown of the current public messaging","Two alternative value propositions","A one line positioning statement to test"], val:`Ask who the launch is mainly meant to reach.`}),
+    growth:(c,s)=>({obj:`Build an activation funnel hypothesis for the ${c.name} launch`, hyp:`New launches often lose users between sign up and first value, which a funnel hypothesis could help diagnose.`, deliv:["A drawn funnel of four to five steps","A guess at the weakest step with reasoning","One test to validate that step"], val:`Ask where they think users drop off today.`})
+  },
+  partnership: {
+    partnerships:(c,s)=>({obj:`Build a partner expansion short list for ${c.name}`, hyp:`A first partnership often signals a repeatable channel, which a short list of similar partners could extend.`, deliv:["A list of eight comparable partners with a fit note each","A simple prioritization by effort and reach","A one line outreach angle for the top three"], val:`Ask what made the first partnership work for them.`}),
+    analytics:(c,s)=>({obj:`Propose a partnership performance scorecard for ${c.name}`, hyp:`New partnerships raise the question of how to measure them, which a simple scorecard could answer.`, deliv:["A one page scorecard of five metrics","A note on which data would be needed","A mock of what the scorecard could show"], val:`Ask how they plan to judge whether the partnership is working.`}),
+    strategy:(c,s)=>({obj:`Draft a partnership playbook outline for ${c.name}`, hyp:`A first deal is a chance to make the next ones faster, which a short playbook could support.`, deliv:["A one page playbook outline","A target partner profile","Two or three qualifying questions"], val:`Ask what slowed the first partnership down.`})
+  },
+  expansion: {
+    ops:(c,s)=>({obj:`Draft a launch readiness checklist for new ${c.name} locations`, hyp:`Opening new locations stresses operations, which a readiness checklist could help standardize.`, deliv:["A one page readiness checklist","A simple roles and timing view","A note on the two riskiest steps"], val:`Ask what broke or lagged during the last opening.`}),
+    finance:(c,s)=>({obj:`Build a new location contribution model for ${c.name}`, hyp:`Each new site raises the question of when it pays back, which a simple model could frame.`, deliv:["A one page contribution model per site using public assumptions","A break even estimate","A list of assumptions to confirm"], val:`Ask how they currently think about payback on a new site.`}),
+    analytics:(c,s)=>({obj:`Propose a cohort view for ${c.name} across locations`, hyp:`Expansion creates a need to compare locations fairly, which a cohort view could provide.`, deliv:["A sketch of a location cohort dashboard","A list of five comparable metrics","A note on data you would request"], val:`Ask which location signals they watch most closely.`})
+  },
+  growth: {
+    research:(c,s)=>({obj:`Design a retention discovery study for ${c.name}`, hyp:`Fast user growth often shifts the problem to retention, which a focused discovery study could inform.`, deliv:["A ten person interview plan focused on drop off","A short guide of six questions","A synthesis template"], val:`Ask at which point users tend to stop coming back.`}),
+    analytics:(c,s)=>({obj:`Draft a retention metric framework for ${c.name}`, hyp:`Scaling users raises the need to define retention clearly, which a simple framework could standardize.`, deliv:["A one page definition of the core retention metric","Two supporting metrics","A mock chart of how it could look"], val:`Ask how they define an active user today.`}),
+    product:(c,s)=>({obj:`Propose three retention experiments for ${c.name}`, hyp:`Growth without retention stalls, which a small set of experiments could begin to address.`, deliv:["Three experiment briefs","A guess at expected effect for each","A note on what to measure"], val:`Ask which part of the experience users praise most.`})
+  }
+};
+
+// generic fallback keeps any confirmed capability usable and still grounded
+function genericOpp(c,s,catKey){
+  const cat = CATS[catKey].label.toLowerCase();
+  return {
+    obj:`Apply your ${cat} to the recent development at ${c.name}`,
+    hyp:`The signal below could create work that your ${cat} is suited to, though the specific need is an inference rather than a stated priority.`,
+    deliv:["A one page analysis tied to the signal","A clear recommendation with assumptions stated","A short list of questions to confirm with the team"],
+    val:`Ask the team whether this is an area they are actively thinking about.`
+  };
+}
+
+/* ---------- App state ---------- */
+let S = loadState() || {
+  consent:false,
+  capabilities:[], // {id,cat,label,evidence,source,status:'proposed'|'confirmed'|'rejected'}
+  goals:{functions:[],industries:"",stage:"Any",location:"New York, NY",oppType:"Internship or project",availability:""},
+  route:null,
+  companyId:null,
+  manualCompany:null,
+  opportunities:[],
+  selectedOppId:null,
+  scope:{duration:"2 weeks",hours:"5 to 8 hours per week",deliverables:[],assumptions:""},
+  proof:{format:"",status:"not_started",link:"",notes:""},
+  claimCheck:{company:false,personal:false,status:false},
+  feedback:{relevance:0,credibility:0,confBefore:0,confAfter:0,comment:""},
+  screen:"consent"
+};
+
+function saveState(){ try{ localStorage.setItem("ob_state", JSON.stringify(S)); }catch(e){} }
+function loadState(){ try{ const r=localStorage.getItem("ob_state"); return r?JSON.parse(r):null; }catch(e){ return null; } }
+function resetAll(){ localStorage.removeItem("ob_state"); location.reload(); }
+
+/* ---------- Router ---------- */
+const FLOW = [
+  {id:"consent", label:"Start"},
+  {id:"profile", label:"Profile"},
+  {id:"home", label:"Explore"},
+  {id:"company", label:"Company"},
+  {id:"opps", label:"Opportunities"},
+  {id:"build", label:"Project and proof"},
+  {id:"outreach", label:"Outreach"},
+  {id:"done", label:"Feedback"}
+];
+function go(id){ S.screen=id; saveState(); render(); window.scrollTo(0,0); }
+function normScreen(id){ if(id==="home_a"||id==="home_b") return "home"; return id; }
+function stepIndex(id){ return FLOW.findIndex(f=>f.id===normScreen(id)); }
+
+function renderSteps(){
+  const cur = stepIndex(S.screen);
+  document.getElementById("steps").innerHTML = FLOW.map((f,i)=>{
+    let cls="step"; if(i===cur)cls+=" active"; else if(i<cur)cls+=" done";
+    return `<span class="${cls}">${i+1}. ${f.label}</span>`;
+  }).join("");
+}
+
+/* ---------- Helpers ---------- */
+function uid(){ return Math.random().toString(36).slice(2,9); }
+function esc(s){ return (s||"").replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function toast(msg){ const t=document.getElementById("toast"); t.textContent=msg; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),1800); }
+function confirmedCaps(){ return S.capabilities.filter(c=>c.status==="confirmed"); }
+function confirmedCats(){ return [...new Set(confirmedCaps().map(c=>c.cat))]; }
+function company(){ return S.manualCompany || COMPANIES.find(c=>c.id===S.companyId); }
+function isStale(sig){ return daysSince(sig.source.published) > STALE_DAYS; }
+function freshestAge(c){ return Math.min(...c.signals.map(s=>daysSince(s.source.published))); }
+
+/* ---------- Screen: Consent ---------- */
+function screenConsent(){
+  return `
+  <h1>Turn startup interest into a grounded proposal</h1>
+  <p class="lede">This prototype helps you decide which startups to pursue, find a credible way to contribute even when no role is posted, build a small proof of work, and draft honest outreach. It is built for two part customer testing, so the data is sample data.</p>
+  <div class="card">
+    <h3>What it does differently from a generic chat prompt</h3>
+    <ul class="fitreasons">
+      <li>Every company claim carries a dated source, so you are not guessing.</li>
+      <li>It separates what is a fact from what is a hypothesis you still need to validate.</li>
+      <li>It will not write that you completed work you have not done.</li>
+    </ul>
+    <div class="divider"></div>
+    <h3>Before you start</h3>
+    <p class="mini">This prototype keeps everything in your browser for this session only. Nothing is sent anywhere. You can clear it at any time with the reset link at the end. It does not request grades, demographic data, or sensitive attributes.</p>
+    <label class="check" style="margin-top:8px;cursor:pointer">
+      <input type="checkbox" id="consentbox" ${S.consent?"checked":""} />
+      <span>I understand this is a prototype with sample data and I am happy to try it and share feedback.</span>
+    </label>
+    <div class="footbar">
+      <span></span>
+      <button class="btn" id="startbtn" ${S.consent?"":"disabled"}>Start</button>
+    </div>
+  </div>`;
+}
+function bindConsent(){
+  document.getElementById("consentbox").onchange=(e)=>{ S.consent=e.target.checked; document.getElementById("startbtn").disabled=!S.consent; saveState(); };
+  document.getElementById("startbtn").onclick=()=>{ if(S.consent) go("profile"); };
+}
+
+/* ---------- Screen: Profile ---------- */
+function extractFromResume(text){
+  const found=[];
+  const sentences = text.split(/[\n.;•]+/).map(s=>s.trim()).filter(s=>s.length>8);
+  CAT_KEYS.forEach(cat=>{
+    for(const kw of CATS[cat].kw){
+      const hit = sentences.find(s=>s.toLowerCase().includes(kw));
+      if(hit && !found.some(f=>f.cat===cat)){
+        found.push({id:uid(),cat,label:CATS[cat].label,evidence:hit.length>140?hit.slice(0,140)+"...":hit,source:"Resume line",status:"proposed"});
+        break;
+      }
+    }
+  });
+  return found;
+}
+function screenProfile(){
+  const caps = S.capabilities;
+  const capHtml = caps.length? caps.map(c=>capRow(c)).join("") :
+    `<p class="mini">No capabilities yet. Paste a resume above or add one manually.</p>`;
+  return `
+  <h1>Build your capability profile</h1>
+  <p class="lede">Paste your resume text to get proposed capabilities, or add them by hand. Nothing is used in a recommendation until you confirm it.</p>
+
+  <div class="card">
+    <label class="fld" for="resume">Paste resume text (optional)</label>
+    <textarea id="resume" rows="5" placeholder="Paste a few lines or your whole resume. For example: Built a three year operating model for a consumer brand. Led ten customer interviews and a segmentation study."></textarea>
+    <div class="footbar">
+      <span class="hint">Each proposed capability is tied to the line it came from and marked as needing your confirmation.</span>
+      <button class="btn ghost sm" id="extractbtn">Propose capabilities</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="row" style="justify-content:space-between;align-items:center">
+      <h3 style="margin:0">Your capabilities</h3>
+      <span class="pill">${confirmedCaps().length} confirmed</span>
+    </div>
+    <div class="divider"></div>
+    <div id="caplist">${capHtml}</div>
+    <div class="divider"></div>
+    <div class="grid2">
+      <div>
+        <label class="fld">Add a capability</label>
+        <select id="newcat">${CAT_KEYS.map(k=>`<option value="${k}">${CATS[k].label}</option>`).join("")}</select>
+      </div>
+      <div>
+        <label class="fld">Your evidence or example</label>
+        <input type="text" id="newev" placeholder="A specific thing you did that shows this" />
+      </div>
+    </div>
+    <div class="footbar"><span></span><button class="btn ghost sm" id="addcap">Add capability</button></div>
+  </div>
+
+  <div class="card">
+    <h3>Goals and constraints</h3>
+    <p class="hint">These shape recommendations. Function and industry are weighted less than demonstrated capability.</p>
+    <div class="divider"></div>
+    <label class="fld">Functions you are targeting</label>
+    <div id="funcs" class="row" style="gap:7px">
+      ${CAT_KEYS.map(k=>`<label class="pill" style="cursor:pointer;${S.goals.functions.includes(k)?'background:var(--brand-soft);color:var(--brand-dark);border-color:#cdd9fb':''}"><input type="checkbox" class="fnbox" value="${k}" ${S.goals.functions.includes(k)?'checked':''} style="margin-right:5px">${CATS[k].label}</label>`).join("")}
+    </div>
+    <div class="grid2" style="margin-top:14px">
+      <div><label class="fld">Industries of interest</label><input type="text" id="gind" value="${esc(S.goals.industries)}" placeholder="e.g. Consumer, Fintech"></div>
+      <div><label class="fld">Stage preference</label>
+        <select id="gstage">${["Any","Seed","Series A"].map(x=>`<option ${S.goals.stage===x?'selected':''}>${x}</option>`).join("")}</select>
+      </div>
+      <div><label class="fld">Opportunity type</label>
+        <select id="gtype">${["Internship or project","In semester project","Full time role"].map(x=>`<option ${S.goals.oppType===x?'selected':''}>${x}</option>`).join("")}</select>
+      </div>
+      <div><label class="fld">Availability</label><input type="text" id="gavail" value="${esc(S.goals.availability)}" placeholder="e.g. 8 hours per week this semester"></div>
+    </div>
+  </div>
+
+  <div class="footbar">
+    <button class="btn ghost" onclick="go('consent')">Back</button>
+    <button class="btn" id="toHome">Continue to discovery</button>
+  </div>`;
+}
+function capRow(c){
+  const confirmed = c.status==="confirmed";
+  return `<div class="cap ${c.status}" data-id="${c.id}">
+    <div class="mid">
+      <div><span class="pill cat">${CATS[c.cat].label}</span> ${confirmed?'<span class="badge fact">Confirmed</span>':'<span class="badge unknown">Needs review</span>'}</div>
+      <div class="evid"><b>${esc(c.source)}:</b> ${esc(c.evidence)||"<i>no example given</i>"}</div>
+    </div>
+    <div class="capctrls">
+      ${confirmed?'':`<button class="btn sm" data-act="confirm" data-id="${c.id}">Confirm</button>`}
+      <button class="btn ghost sm" data-act="edit" data-id="${c.id}">Edit</button>
+      <button class="btn danger sm" data-act="remove" data-id="${c.id}">Remove</button>
+    </div>
+  </div>`;
+}
+function bindProfile(){
+  document.getElementById("extractbtn").onclick=()=>{
+    const t=document.getElementById("resume").value.trim();
+    if(!t){ toast("Paste some resume text first"); return; }
+    const found=extractFromResume(t);
+    if(!found.length){ toast("No clear skills found. Try adding one manually."); return; }
+    found.forEach(f=>{ if(!S.capabilities.some(c=>c.cat===f.cat)) S.capabilities.push(f); });
+    saveState(); renderInline();
+    toast(found.length+" capabilities proposed. Confirm the ones that fit.");
+  };
+  document.getElementById("addcap").onclick=()=>{
+    const cat=document.getElementById("newcat").value;
+    const ev=document.getElementById("newev").value.trim();
+    S.capabilities.push({id:uid(),cat,label:CATS[cat].label,evidence:ev,source:"Added by you",status:"confirmed"});
+    document.getElementById("newev").value="";
+    saveState(); renderInline(); toast("Capability added and confirmed.");
+  };
+  document.querySelectorAll("[data-act]").forEach(b=>{
+    b.onclick=()=>{
+      const id=b.dataset.id, act=b.dataset.act;
+      const cap=S.capabilities.find(c=>c.id===id);
+      if(act==="confirm"){ cap.status="confirmed"; }
+      if(act==="remove"){ S.capabilities=S.capabilities.filter(c=>c.id!==id); }
+      if(act==="edit"){
+        const nv=prompt("Edit your evidence or example:",cap.evidence||"");
+        if(nv!==null){ cap.evidence=nv; cap.status="confirmed"; }
+      }
+      saveState(); renderInline();
+    };
+  });
+  document.querySelectorAll(".fnbox").forEach(b=>{
+    b.onchange=()=>{ S.goals.functions = [...document.querySelectorAll(".fnbox:checked")].map(x=>x.value); saveState(); };
+  });
+  document.getElementById("toHome").onclick=()=>{
+    S.goals.industries=document.getElementById("gind").value;
+    S.goals.stage=document.getElementById("gstage").value;
+    S.goals.oppType=document.getElementById("gtype").value;
+    S.goals.availability=document.getElementById("gavail").value;
+    if(confirmedCaps().length===0){ toast("Confirm at least one capability to continue."); return; }
+    saveState(); go("home");
+  };
+}
+function renderInline(){
+  // refresh capability list and counts without full rerender to keep form state
+  const cl=document.getElementById("caplist");
+  if(cl){ cl.innerHTML = S.capabilities.length? S.capabilities.map(capRow).join("") : `<p class="mini">No capabilities yet.</p>`; }
+  const pill=document.querySelector(".card .pill");
+  render(); // simplest reliable path
+}
+
+/* ---------- Scoring and recommendations ---------- */
+function scoreCompany(c){
+  const caps=confirmedCats();
+  const capOverlap = c.workAreas.filter(w=>caps.includes(w));
+  const funcOverlap = c.workAreas.filter(w=>S.goals.functions.includes(w));
+  const fresh = freshestAge(c) <= STALE_DAYS;
+  const indPref = S.goals.industries.toLowerCase().split(/[, ]+/).filter(Boolean);
+  const indOverlap = c.industries.filter(i=>indPref.some(p=>i.toLowerCase().includes(p)));
+  // hard stops
+  if(S.goals.stage!=="Any" && c.stage!==S.goals.stage) return {score:-1,reasons:[],caveat:"",hardStop:"Stage does not match your preference."};
+  if(capOverlap.length===0) return {score:-1,reasons:[],caveat:"",hardStop:"No confirmed capability connects to a plausible contribution."};
+  let score=0;
+  score += 35 * (capOverlap.length / Math.max(1,c.workAreas.length));
+  score += 20 * (funcOverlap.length? Math.min(1,funcOverlap.length/2):0);
+  score += 20 * (fresh?1:0.3);
+  score += 15; // constraints satisfied (location is NYC for all seed data)
+  score += 10 * (indOverlap.length?1:0);
+  const reasons=[];
+  capOverlap.forEach(w=>{
+    const cap=confirmedCaps().find(x=>x.cat===w);
+    reasons.push(`Your ${CATS[w].label.toLowerCase()} maps to work this company likely needs.`);
+  });
+  if(funcOverlap.length) reasons.push(`It fits a function you are targeting.`);
+  if(indOverlap.length) reasons.push(`It sits in an industry you listed (${indOverlap.join(", ")}).`);
+  let caveat="";
+  if(!fresh) caveat="The most recent public signal is older than four months, so treat the fit as directional.";
+  else if(c.stage==="Seed") caveat="This is a seed stage team, so expect limited structure and shifting priorities.";
+  else caveat="Signals are public and may not reflect the team's current internal priorities.";
+  return {score:Math.round(score),reasons:reasons.slice(0,3),caveat,hardStop:null};
+}
+function recommendations(){
+  return COMPANIES.map(c=>({c,...scoreCompany(c)}))
+    .filter(x=>x.score>=0)
+    .sort((a,b)=>b.score-a.score)
+    .slice(0,4);
+}
+
+/* ---------- Screen: Home (two routes) ---------- */
+function screenHome(){
+  return `
+  <h1>Two ways to find an opportunity</h1>
+  <p class="lede">Explore companies matched to your confirmed capabilities, or start from a company you already care about. Both lead to the same grounded builder.</p>
+  <div class="grid2">
+    <div class="card" style="text-align:left">
+      <h3>Explore recommendations</h3>
+      <p class="mini">See a short set of NYC startups where your capabilities plausibly fit, with the reasons shown.</p>
+      <button class="btn" onclick="S.route='A';saveState();go('home_a')">Explore matches</button>
+    </div>
+    <div class="card">
+      <h3>Search a company</h3>
+      <p class="mini">Look up a seeded company or enter one you already have in mind.</p>
+      <button class="btn ghost" onclick="S.route='B';saveState();go('home_b')">Search a company</button>
+    </div>
+  </div>
+  <div class="footbar"><button class="btn ghost" onclick="go('profile')">Back to profile</button><span></span></div>`;
+}
+
+/* Route A list */
+function screenHomeA(){
+  const recs=recommendations();
+  const body = recs.length? recs.map(r=>{
+    const c=r.c; const age=freshestAge(c);
+    return `<div class="companycard">
+      <div class="hd">
+        <div><h3 style="margin:0">${esc(c.name)}</h3><div class="mini">${esc(c.desc)}</div></div>
+        <span class="pill">${esc(c.stage)}</span>
+      </div>
+      <div class="row" style="gap:6px"><span class="pill">${esc(c.location)}</span>${c.industries.map(i=>`<span class="pill">${esc(i)}</span>`).join("")}</div>
+      <ul class="fitreasons">${r.reasons.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
+      <div class="caveat">What weakens the fit: ${esc(r.caveat)}</div>
+      <div class="mini">Freshest signal: ${age} days old</div>
+      <div class="footbar"><span></span><button class="btn sm" onclick="openCompany('${c.id}')">View and find how I could help</button></div>
+    </div>`;
+  }).join("") : `<div class="note">No company clears the bar with your current confirmed capabilities and constraints. Try confirming more capabilities or widening your stage preference. Showing no result is intentional rather than weakening your constraints silently.</div>`;
+  return `
+  <h1>Recommended for you</h1>
+  <p class="lede">A short set, not an endless feed. Each card shows why it was recommended and what weakens the fit.</p>
+  ${body}
+  <div class="footbar"><button class="btn ghost" onclick="go('home')">Back</button><span></span></div>`;
+}
+
+/* Route B search */
+function screenHomeB(){
+  return `
+  <h1>Search a company</h1>
+  <p class="lede">Search the seeded set, or enter a company you already care about. Entered companies without seeded sources get a research needed state instead of invented facts.</p>
+  <div class="card">
+    <label class="fld">Search seeded companies</label>
+    <input type="text" id="csearch" placeholder="Type a name, sector, or keyword" />
+    <div id="cresults" style="margin-top:10px"></div>
+  </div>
+  <div class="card">
+    <h3>Enter your own company</h3>
+    <div class="grid2">
+      <div><label class="fld">Company name</label><input type="text" id="mname" placeholder="Company name"></div>
+      <div><label class="fld">Website</label><input type="url" id="msite" placeholder="https://"></div>
+    </div>
+    <div class="footbar"><span class="hint">The prototype will flag that it has no sourced signals for this company.</span><button class="btn ghost sm" id="menter">Use this company</button></div>
+  </div>
+  <div class="footbar"><button class="btn ghost" onclick="go('home')">Back</button><span></span></div>`;
+}
+function bindHomeB(){
+  const inp=document.getElementById("csearch");
+  const out=document.getElementById("cresults");
+  function run(){
+    const q=inp.value.toLowerCase().trim();
+    const list = q? COMPANIES.filter(c=> (c.name+" "+c.desc+" "+c.industries.join(" ")).toLowerCase().includes(q)) : COMPANIES;
+    out.innerHTML = list.length? list.map(c=>`<div class="cap"><div class="mid"><b>${esc(c.name)}</b> <span class="pill">${esc(c.stage)}</span><div class="mini">${esc(c.desc)}</div></div><button class="btn sm" onclick="openCompany('${c.id}')">Open</button></div>`).join("") : `<p class="mini">No seeded match. You can enter it manually below.</p>`;
+  }
+  inp.oninput=run; run();
+  document.getElementById("menter").onclick=()=>{
+    const n=document.getElementById("mname").value.trim();
+    if(!n){ toast("Enter a company name"); return; }
+    S.manualCompany={id:"manual",name:n,website:document.getElementById("msite").value.trim(),desc:"Company you entered",location:"Unknown",stage:"Unknown",industries:["Unknown"],workAreas:confirmedCats(),signals:[],manual:true};
+    S.companyId="manual"; saveState(); go("company");
+  };
+}
+function openCompany(id){ S.manualCompany=null; S.companyId=id; saveState(); go("company"); }
+
+/* ---------- Screen: Company profile ---------- */
+function screenCompany(){
+  const c=company();
+  if(!c){ return `<div class="note">No company selected.</div>`; }
+  const sigHtml = c.signals.length? c.signals.map(s=>{
+    const stale=isStale(s); const age=daysSince(s.source.published);
+    return `<div class="signal ${stale?'stale':''}">
+      <div><span class="badge ${stale?'hyp':'fact'}">${stale?'Stale signal':'Current signal'}</span> ${esc(s.fact)}</div>
+      <div class="mini" style="margin-top:4px">"${esc(s.excerpt)}"</div>
+      <div class="meta">Source: ${esc(s.source.publisher)} • published ${esc(s.source.published)} • ${age} days old • retrieved ${esc(TODAY.toISOString().slice(0,10))}</div>
+    </div>`;
+  }).join("") : `<div class="note">No sourced signals for this company in the prototype. The builder will mark any project as research needed and will not invent company facts.</div>`;
+  return `
+  <h1>${esc(c.name)}</h1>
+  <p class="lede">${esc(c.desc)}</p>
+  <div class="card tight">
+    <div class="row" style="gap:7px">
+      <span class="pill">${esc(c.location)}</span>
+      <span class="pill">Stage: ${esc(c.stage)}</span>
+      ${c.industries.map(i=>`<span class="pill">${esc(i)}</span>`).join("")}
+    </div>
+    ${c.stage==="Unknown"?`<div class="caveat" style="margin-top:10px">Stage, location, and industry are unknown for an entered company. The prototype will not infer them.</div>`:""}
+  </div>
+  <div class="card">
+    <h3>Current public signals</h3>
+    <p class="hint">Facts carry a source and date. The builder uses these to anchor any proposed project.</p>
+    <div class="divider"></div>
+    ${sigHtml}
+  </div>
+  <div class="footbar">
+    <button class="btn ghost" onclick="go(S.route==='A'?'home_a':'home_b')">Back</button>
+    <button class="btn" onclick="buildOpps()">Find how I could help</button>
+  </div>`;
+}
+
+/* ---------- Build opportunities (grounding contract) ---------- */
+function buildOpps(){
+  const c=company();
+  const caps=confirmedCaps();
+  const opps=[];
+  // pair each current (fresh) signal with each confirmed capability category
+  c.signals.forEach(sig=>{
+    const stale=isStale(sig);
+    caps.forEach(cap=>{
+      const tpl = (TEMPLATES[sig.type] && TEMPLATES[sig.type][cap.cat]) ? TEMPLATES[sig.type][cap.cat](c,sig) : genericOpp(c,sig,cap.cat);
+      // confidence: count fresh signals
+      const freshCount = c.signals.filter(x=>!isStale(x)).length;
+      let conf = "medium";
+      if(stale) conf="low";
+      else if(freshCount>=2) conf="higher";
+      opps.push({
+        id:uid(), capId:cap.id, cat:cap.cat, signalFact:sig.fact, source:sig.source, stale,
+        objective:tpl.obj, hypothesis:tpl.hyp, deliverables:tpl.deliv, validation:tpl.val,
+        studentAnchor:cap.evidence||CATS[cap.cat].label, confidence:conf
+      });
+    });
+  });
+  // sort: higher, medium, low; keep up to 3 non low first
+  const order={higher:0,medium:1,low:2};
+  opps.sort((a,b)=>order[a.confidence]-order[b.confidence]);
+  const nonLow=opps.filter(o=>o.confidence!=="low");
+  S.opportunities = (nonLow.length? nonLow : opps).slice(0,3);
+  S.selectedOppId=null;
+  saveState(); go("opps");
+}
+function screenOpps(){
+  const c=company();
+  if(!S.opportunities.length){
+    return `<h1>No grounded opportunity yet</h1>
+    <div class="note">The builder could not ground a project for ${esc(c.name)}. That happens when there is no current signal, or no confirmed capability connects to one. Try another company, add a confirmed capability, or enter more company information. The prototype will not generate a project from interest alone.</div>
+    <div class="footbar"><button class="btn ghost" onclick="go('company')">Back</button><span></span></div>`;
+  }
+  const allLow = S.opportunities.every(o=>o.confidence==="low");
+  const body = S.opportunities.map(o=>{
+    const sel=S.selectedOppId===o.id;
+    return `<div class="opp ${sel?'selected':''}">
+      <div class="row" style="justify-content:space-between;align-items:center">
+        <h3 style="margin:0">${esc(o.objective)}</h3>
+        <span class="badge ${o.confidence==='higher'?'hi':o.confidence==='medium'?'med':'low'}">${o.confidence} confidence</span>
+      </div>
+      <div class="ground fact"><span class="lbl">Fact, from a dated source</span>${esc(o.signalFact)} <span class="mini">(${esc(o.source.publisher)}, ${esc(o.source.published)})</span></div>
+      <div class="ground hyp"><span class="lbl">Hypothesis, not a confirmed company priority</span>${esc(o.hypothesis)}</div>
+      <div class="ground scope"><span class="lbl">Your anchor</span>${esc(o.studentAnchor)}</div>
+      <div><b class="mini">Proposed deliverables</b><ul class="deliv">${o.deliverables.map(d=>`<li>${esc(d)}</li>`).join("")}</ul></div>
+      <div class="ground hyp" style="background:var(--brand-soft)"><span class="lbl" style="color:var(--brand-dark)">Validation step before you invest</span>${esc(o.validation)}</div>
+      ${o.confidence==='low'?`<div class="caveat">This rests on a stale or indirect signal, so treat it as research needed rather than a recommended project.</div>`:""}
+      <div class="footbar"><span></span><button class="btn sm ${sel?'':'ghost'}" onclick="selectOpp('${o.id}')">${sel?'Selected':'Select this opportunity'}</button></div>
+    </div>`;
+  }).join("");
+  return `
+  <h1>Up to three grounded opportunities</h1>
+  <p class="lede">Each one cites a dated company fact and one of your confirmed capabilities. The inference between them is labeled a hypothesis, with a way to check it.</p>
+  ${allLow?`<div class="note">Every option here rests on older evidence. Consider validating before you invest time.</div>`:""}
+  ${body}
+  <div class="footbar">
+    <button class="btn ghost" onclick="go('company')">Back</button>
+    <button class="btn" id="toBuild" ${S.selectedOppId?'':'disabled'}>Continue with selected</button>
+  </div>`;
+}
+function selectOpp(id){ S.selectedOppId=id; const o=S.opportunities.find(x=>x.id===id); S.scope.deliverables=[...o.deliverables]; saveState(); render(); }
+function bindOpps(){ const b=document.getElementById("toBuild"); if(b) b.onclick=()=>{ if(S.selectedOppId) go("build"); }; }
+
+/* ---------- Screen: Project builder + proof of work ---------- */
+function selectedOpp(){ return S.opportunities.find(o=>o.id===S.selectedOppId); }
+function screenBuild(){
+  const o=selectedOpp(); const c=company();
+  if(!o) return `<div class="note">No opportunity selected.</div>`;
+  const formats=["Five slide landscape or teardown","Ten item target list with rationale","One page model using stated assumptions","Short research or discovery plan"];
+  return `
+  <h1>Shape the project and plan your proof of work</h1>
+  <p class="lede">Edit the scope to something you would actually do. Then plan a small artifact, roughly 60 to 180 minutes. The system will not mark it complete for you.</p>
+
+  <div class="card">
+    <h3>${esc(o.objective)}</h3>
+    <div class="ground fact"><span class="lbl">Company fact</span>${esc(o.signalFact)}</div>
+    <div class="divider"></div>
+    <div class="grid2">
+      <div><label class="fld">Duration</label><input type="text" id="sdur" value="${esc(S.scope.duration)}"></div>
+      <div><label class="fld">Effort</label><input type="text" id="shours" value="${esc(S.scope.hours)}"></div>
+    </div>
+    <label class="fld" style="margin-top:12px">Deliverables (one per line)</label>
+    <textarea id="sdeliv" rows="4">${esc(S.scope.deliverables.join("\n"))}</textarea>
+    <label class="fld" style="margin-top:12px">Assumptions you are making</label>
+    <textarea id="sassume" rows="2" placeholder="State what you are assuming, since you do not have internal information.">${esc(S.scope.assumptions)}</textarea>
+  </div>
+
+  <div class="card">
+    <h3>Proof of work plan</h3>
+    <p class="hint">The AI can give you a template and critique, but you supply the findings. It cannot invent results.</p>
+    <div class="divider"></div>
+    <label class="fld">Artifact format</label>
+    <select id="pformat">${formats.map(f=>`<option ${S.proof.format===f?'selected':''}>${f}</option>`).join("")}</select>
+
+    <div class="note" style="margin-top:12px">
+      <b>Suggested steps</b>
+      <ol style="margin:6px 0 0;padding-left:18px">
+        <li>Gather two or three public sources about the signal above.</li>
+        <li>Build the artifact using only public information and your stated assumptions.</li>
+        <li>Mark clearly what is a fact and what is your hypothesis.</li>
+        <li>Note the one question you would ask the team to validate it.</li>
+      </ol>
+    </div>
+
+    <label class="fld" style="margin-top:14px">Status of your artifact</label>
+    <div class="radiolist" id="pstatus">
+      ${[["not_started","Not started"],["in_progress","In progress"],["complete","Complete, I did the work"]].map(([v,l])=>`<label class="${S.proof.status===v?'on':''}"><input type="radio" name="pst" value="${v}" ${S.proof.status===v?'checked':''}><span>${l}</span></label>`).join("")}
+    </div>
+    <label class="fld" style="margin-top:8px">Link to your artifact (optional)</label>
+    <input type="url" id="plink" value="${esc(S.proof.link)}" placeholder="https:// a doc, sheet, or file you made">
+    <label class="fld" style="margin-top:12px">Notes on what you did</label>
+    <textarea id="pnotes" rows="2" placeholder="A sentence on what you actually produced.">${esc(S.proof.notes)}</textarea>
+  </div>
+
+  <div class="footbar">
+    <button class="btn ghost" onclick="go('opps')">Back</button>
+    <button class="btn" id="toOutreach">Draft outreach</button>
+  </div>`;
+}
+function bindBuild(){
+  document.querySelectorAll('input[name="pst"]').forEach(r=>{
+    r.onchange=()=>{ S.proof.status=r.value; document.querySelectorAll('#pstatus label').forEach(l=>l.classList.remove('on')); r.closest('label').classList.add('on'); saveState(); };
+  });
+  document.getElementById("toOutreach").onclick=()=>{
+    S.scope.duration=document.getElementById("sdur").value;
+    S.scope.hours=document.getElementById("shours").value;
+    S.scope.deliverables=document.getElementById("sdeliv").value.split("\n").map(x=>x.trim()).filter(Boolean);
+    S.scope.assumptions=document.getElementById("sassume").value;
+    S.proof.format=document.getElementById("pformat").value;
+    S.proof.link=document.getElementById("plink").value;
+    S.proof.notes=document.getElementById("pnotes").value;
+    if(S.proof.status==="complete" && !S.proof.link && !S.proof.notes){
+      if(!confirm("You marked the work complete but added no link or note. The outreach will say you completed it. Continue?")) return;
+    }
+    S.claimCheck={company:false,personal:false,status:false};
+    saveState(); go("outreach");
+  };
+}
+
+/* ---------- Screen: Outreach ---------- */
+function outreachText(){
+  const o=selectedOpp(); const c=company();
+  const st=S.proof.status;
+  let verb, statusLine;
+  if(st==="complete"){ verb="I put together"; statusLine=`I have completed a first pass and can share it: ${S.proof.link||"happy to send it over"}.`; }
+  else if(st==="in_progress"){ verb="I am putting together"; statusLine="I am partway through a first pass and can share an early version this week."; }
+  else { verb="I would like to put together"; statusLine="I have not started it yet, but I can turn it around quickly if it is useful."; }
+  const deliv = S.scope.deliverables[0] || (o?o.deliverables[0]:"a short analysis");
+  return `Subject: A quick idea tied to ${c.name}'s recent news
+
+Hi [name],
+
+I saw that ${c.name} ${o.signalFact.charAt(0).toLowerCase()+o.signalFact.slice(1)} I follow companies working on this closely.
+
+Off the back of that, ${verb} ${deliv.toLowerCase()}. To be clear, this is a hypothesis from the outside rather than a read on your internal priorities, so I would want to check one thing with you: ${o.validation.toLowerCase()}
+
+${statusLine}
+
+If it is helpful, I would value fifteen minutes to hear whether I am pointed in the right direction. Either way, I am a fan of what you are building.
+
+Best,
+[your name]`;
+}
+function screenOutreach(){
+  const st=S.proof.status;
+  const warn = st==="not_started"? `<div class="caveat">Your artifact is not started, so the draft says you would like to create it, never that you already did. Change the status on the previous screen to update this.</div>`
+    : st==="in_progress"? `<div class="caveat">Your artifact is in progress, so the draft offers an early version rather than a finished one.</div>`
+    : `<div class="note">Your artifact is marked complete, so the draft can reference finished work.</div>`;
+  return `
+  <h1>Outreach draft</h1>
+  <p class="lede">The wording matches your proof of work status. Review every claim before you copy it.</p>
+  ${warn}
+  <div class="card">
+    <div class="outreach" id="otext">${esc(outreachText())}</div>
+    <div class="footbar"><span class="hint">Edit freely after copying. No message is sent from here.</span><button class="btn sm" id="copybtn">Copy message</button></div>
+  </div>
+  <div class="card">
+    <h3>Claim check before you send</h3>
+    <p class="hint">Confirm each is accurate. You cannot continue until all three are checked.</p>
+    <div class="divider"></div>
+    <label class="check"><input type="checkbox" class="cc" data-k="company" ${S.claimCheck.company?'checked':''}><span>The company fact in the message is accurate and sourced.</span></label>
+    <label class="check"><input type="checkbox" class="cc" data-k="personal" ${S.claimCheck.personal?'checked':''}><span>Every claim about me is true and backed by a confirmed capability.</span></label>
+    <label class="check"><input type="checkbox" class="cc" data-k="status" ${S.claimCheck.status?'checked':''}><span>The message states my real artifact status and does not overstate it.</span></label>
+  </div>
+  <div class="footbar">
+    <button class="btn ghost" onclick="go('build')">Back</button>
+    <button class="btn" id="toDone" ${allChecked()?'':'disabled'}>Finish and give feedback</button>
+  </div>`;
+}
+function allChecked(){ return S.claimCheck.company&&S.claimCheck.personal&&S.claimCheck.status; }
+function bindOutreach(){
+  document.getElementById("copybtn").onclick=()=>{ navigator.clipboard&&navigator.clipboard.writeText(outreachText()); toast("Copied to clipboard"); };
+  document.querySelectorAll(".cc").forEach(b=>{
+    b.onchange=()=>{ S.claimCheck[b.dataset.k]=b.checked; saveState(); document.getElementById("toDone").disabled=!allChecked(); };
+  });
+  document.getElementById("toDone").onclick=()=>{ if(allChecked()) go("done"); };
+}
+
+/* ---------- Screen: Package + feedback ---------- */
+function screenDone(){
+  const o=selectedOpp(); const c=company();
+  return `
+  <h1>Your opportunity package</h1>
+  <p class="lede">A grounded, student owned package for ${esc(c.name)}. This is what you would take into a conversation.</p>
+  <div class="card">
+    <div class="kpi">
+      <div class="b"><b>${esc(c.name)}</b>Company</div>
+      <div class="b"><b>${confirmedCaps().length}</b>Confirmed capabilities</div>
+      <div class="b"><b>${S.proof.status.replace("_"," ")}</b>Proof status</div>
+    </div>
+    <div class="divider"></div>
+    <div class="ground fact"><span class="lbl">Cited company signal</span>${esc(o.signalFact)} <span class="mini">(${esc(o.source.publisher)}, ${esc(o.source.published)})</span></div>
+    <div class="ground scope"><span class="lbl">Project</span>${esc(o.objective)} • ${esc(S.scope.duration)}, ${esc(S.scope.hours)}</div>
+    <div class="ground hyp"><span class="lbl">Open validation question</span>${esc(o.validation)}</div>
+  </div>
+
+  <div class="card">
+    <h3>Two minute feedback</h3>
+    <p class="hint">This is the heart of the test. Your ratings help judge whether the prototype works.</p>
+    <div class="divider"></div>
+    ${starRow("relevance","How relevant was the company recommendation?")}
+    ${starRow("credibility","How credible was the proposed project?")}
+    <div class="grid2" style="margin-top:6px">
+      <div>${starRow("confBefore","Confidence approaching a startup BEFORE using this",true)}</div>
+      <div>${starRow("confAfter","Confidence AFTER using this",true)}</div>
+    </div>
+    <label class="fld" style="margin-top:12px">What would you change, and what surprised you?</label>
+    <textarea id="fcomment" rows="3">${esc(S.feedback.comment)}</textarea>
+    <div class="footbar"><span></span><button class="btn" id="savefb">Save feedback</button></div>
+    <div id="fbout"></div>
+  </div>
+
+  <div class="card tight">
+    <div class="row" style="justify-content:space-between;align-items:center">
+      <span class="mini">Prototype with sample data. Clear everything to start over.</span>
+      <button class="btn danger sm" onclick="if(confirm('Clear all prototype data?'))resetAll()">Reset prototype</button>
+    </div>
+  </div>`;
+}
+function starRow(key,label,small){
+  const v=S.feedback[key]||0;
+  return `<div style="margin:8px 0"><div class="${small?'mini':'fld'}">${label}</div>
+    <div class="stars" data-key="${key}">${[1,2,3,4,5].map(n=>`<span class="star ${n<=v?'on':''}" data-n="${n}">★</span>`).join("")}</div></div>`;
+}
+function bindDone(){
+  document.querySelectorAll(".stars").forEach(row=>{
+    row.querySelectorAll(".star").forEach(st=>{
+      st.onclick=()=>{ S.feedback[row.dataset.key]=+st.dataset.n; saveState(); render(); };
+    });
+  });
+  document.getElementById("savefb").onclick=()=>{
+    S.feedback.comment=document.getElementById("fcomment").value;
+    saveState();
+    const delta=(S.feedback.confAfter||0)-(S.feedback.confBefore||0);
+    document.getElementById("fbout").innerHTML=`<div class="note" style="margin-top:12px">Saved. Thank you. Confidence change recorded: ${delta>=0?'+':''}${delta} point${Math.abs(delta)===1?'':'s'} on a five point scale.</div>`;
+    toast("Feedback saved");
+  };
+}
+
+/* ---------- Main render ---------- */
+function render(){
+  renderSteps();
+  const map={
+    consent:[screenConsent,bindConsent],
+    profile:[screenProfile,bindProfile],
+    home:[screenHome,null],
+    home_a:[screenHomeA,null],
+    home_b:[screenHomeB,bindHomeB],
+    company:[screenCompany,null],
+    opps:[screenOpps,bindOpps],
+    build:[screenBuild,bindBuild],
+    outreach:[screenOutreach,bindOutreach],
+    done:[screenDone,bindDone]
+  };
+  const [view,bind]=map[S.screen]||map.consent;
+  document.getElementById("screen").innerHTML=view();
+  if(bind) bind();
+}
+// steps indicator maps home_a/home_b/company to their flow groups
+function renderStepsPatch(){}
+window.go=go; window.openCompany=openCompany; window.buildOpps=buildOpps; window.selectOpp=selectOpp; window.resetAll=resetAll; window.S=S; window.saveState=saveState;
+render();
+</script>
+</body>
+</html>
